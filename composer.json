@@ -21,5 +21,16 @@
         "psr-4": {
             "ItpassionLtd\\Countries\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ITPassionLtd\\Countries\\CountriesServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "illuminate/support": "^11.24",
+        "illuminate/database": "^11.24"
     }
 }
