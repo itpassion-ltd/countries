@@ -1,0 +1,12 @@
+### Find the latest assets URL ("zipball_url"):
+
+https://api.github.com/repos/antonioribeiro/countries/releases/latest
+
+This provides a JSON string that has a "zipball_url" key that we can use to download the latest zipball.
+
+### Download the latest zipball:
+
+https://api.github.com/repos/antonioribeiro/countries/zipball/v0.6.2
+
+This provides a 302 relocation status, with a Location response header. The file can then be downloaded from that URL.
+
