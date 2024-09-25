@@ -4,6 +4,7 @@ namespace ItpassionLtd\Countries\Concerns;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 trait DownloadAntonioRibeiroCountries
 {
@@ -65,6 +66,14 @@ trait DownloadAntonioRibeiroCountries
         $response = Http::get($url)->throw();
         if($response->redirect()) {
             return $response->header('Location');
+        } else {
+            ob_start();
+            var_dump('$response->header(\'Location\'): "'.$response->header('Location').'"');
+            var_dump('$response->header(\'Location:\'): "'.$response->header('Location:').'"');
+            var_dump('$response->headers():');
+            var_dump($response->headers());
+            Log::debug(ob_get_contents());
+            ob_end_clean();
         }
 
         return null;
@@ -82,6 +91,7 @@ trait DownloadAntonioRibeiroCountries
             ->throw();
         $json = json_decode($response, true);
 
+        Log::debug('Zipball URL: "'.$json['zipball_url'].'"');
         return $json['zipball_url'];
     }
 }
