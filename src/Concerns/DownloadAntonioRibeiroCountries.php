@@ -57,15 +57,17 @@ trait DownloadAntonioRibeiroCountries
      * Get the Location header from the zipball url.
      *
      * @param string $url
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Http\Client\RequestException
      */
-    protected function getRedirectLocation(string $url): string
+    protected function getRedirectLocation(string $url): string|null
     {
         $response = Http::get($url)->throw();
         if($response->redirect()) {
             return $response->header('Location');
         }
+
+        return null;
     }
 
     /**
