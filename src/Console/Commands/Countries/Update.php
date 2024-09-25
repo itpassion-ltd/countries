@@ -4,10 +4,11 @@ namespace ItpassionLtd\Countries\Console\Commands\Countries;
 
 use Illuminate\Console\Command;
 use ItpassionLtd\Countries\Concerns\DownloadAntonioRibeiroCountries;
+use ItpassionLtd\Countries\Concerns\UnzipRepository;
 
 class Update extends Command
 {
-    use DownloadAntonioRibeiroCountries;
+    use DownloadAntonioRibeiroCountries, UnzipRepository;
 
     /**
      * The name and signature of the console command.
@@ -29,7 +30,13 @@ class Update extends Command
     public function handle()
     {
         try {
-            $this->downloadAntonioRibeiroCountries();
+            $this->components->info('Downloading repository ...');
+            $zipFileName = $this->downloadAntonioRibeiroCountries();
+            $this->components->info('Extracting repository ...');
+            $directory = $this->unzipRepository($zipFileName);
+            $this->components->info('Storing data in the database ...');
+
+            $this->components->success('Countries information successfully updated.');
             exit(self::SUCCESS);
         } catch(\Exception $exception) {
             $this->components->error('The update failed: "' . $exception->getMessage() . '"');
