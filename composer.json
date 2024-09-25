@@ -28,7 +28,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ITPassionLtd\\Countries\\CountriesServiceProvider"
+                "ItpassionLtd\\Countries\\CountriesServiceProvider"
             ]
         }
     }
