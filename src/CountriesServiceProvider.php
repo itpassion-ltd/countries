@@ -21,7 +21,7 @@ class CountriesServiceProvider extends ServiceProvider
 
 
         $this->publishes([
-            __DIR__.'../config/itpassion-ltd-countries.php' => config_path('itpassion-ltd-countries.php'),
+            __DIR__.'/../config/itpassion-ltd-countries.php' => config_path('itpassion-ltd-countries.php'),
         ]);
 
         $this->publishesMigrations([
@@ -32,7 +32,7 @@ class CountriesServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'../config/itpassion-ltd-countries.php', 'itpassion-ltd-countries'
+            __DIR__.'/../config/itpassion-ltd-countries.php', 'itpassion-ltd-countries'
         );
     }
 }
