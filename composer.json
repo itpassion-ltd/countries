@@ -9,13 +9,16 @@
             "email": "guus.leeuw@itpassion.com"
         }
     ],
+    "require": {
+        "laravel/framework": "^11.0"
+    },
     "autoload": {
         "psr-4": {
             "ItpassionLtd\\Countries\\": "src/"
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.0.1"
+        "phpunit/phpunit": "^11.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -28,9 +31,5 @@
                 "ITPassionLtd\\Countries\\CountriesServiceProvider"
             ]
         }
-    },
-    "require": {
-        "illuminate/support": "^11.24",
-        "illuminate/database": "^11.24"
     }
 }
