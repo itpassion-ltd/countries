@@ -17,7 +17,7 @@ trait DownloadAntonioRibeiroCountries
     protected function downloadAntonioRibeiroCountries(): string
     {
         $zipballUrl = $this->getZipBallUrl();
-        return $this->downloadChunks($zipballUrl);
+        return $this->downloadZipBall($zipballUrl);
     }
 
     /**
@@ -63,7 +63,9 @@ trait DownloadAntonioRibeiroCountries
      */
     protected function getRedirectLocation(string $url): string|null
     {
-        $response = Http::get($url)->throw();
+        $response = Http::withoutRedirecting()
+            ->get($url)
+            ->throw();
         if($response->redirect()) {
             return $response->header('Location');
         } else {
