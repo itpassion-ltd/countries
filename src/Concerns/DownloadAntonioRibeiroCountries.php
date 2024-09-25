@@ -17,7 +17,7 @@ trait DownloadAntonioRibeiroCountries
     protected function downloadAntonioRibeiroCountries(): string
     {
         $zipballUrl = $this->getZipBallUrl();
-        return $this->downloadZipBall($zipballUrl);
+        return $this->downloadChunks($zipballUrl);
     }
 
     /**
