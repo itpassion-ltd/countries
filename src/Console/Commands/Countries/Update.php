@@ -36,7 +36,7 @@ class Update extends Command
             $this->components->info('Extracting repository ...');
             $directory = $this->unzipRepository($zipFileName);
             $this->components->info('Storing data in the database ...');
-            $this->
+            $this->storeData($directory);
             $this->components->success('Countries information successfully updated.');
             exit(self::SUCCESS);
         } catch(\Exception $exception) {
