@@ -12,11 +12,11 @@ trait StoreData
      */
     protected function storeCurrencies(string $baseDirectory):void
     {
-        $this->write('Storing currencies ... ');
+        $this->output->write('Storing currencies ... ');
         $start = microtime(true);
 
         $duration = microtime(true) - $start;
-        $this->writeLn('done ('.$duration.'s)');
+        $this->output->writeLn('done ('.$duration.'s)');
     }
 
     /**
