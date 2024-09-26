@@ -25,12 +25,13 @@ trait StoreData
                 $currencyJson = json_decode($jsonString, true);
                 Currency::updateOrCreate([
                     'alpha_3' => $currencyJson['iso']['code'],
+                    'numeric' => (string) $currencyJson['iso']['number'],
+                ], [
                     'minor_name' => $currencyJson['units']['minor']['name'],
                     'minor_symbol' => $currencyJson['units']['minor']['symbol'],
                     'minor_unit' => (float) ($currencyJson['units']['minor']['majorValue'] !== '' ? $currencyJson['units']['minor']['majorValue'] : 0.00),
                     'major_name' => $currencyJson['units']['major']['name'],
                     'major_symbol' => $currencyJson['units']['major']['symbol'],
-                    'numeric' => (string) $currencyJson['iso']['number'],
                 ]);
             }
         }
