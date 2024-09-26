@@ -19,7 +19,7 @@ trait UnzipRepository
         $dir = opendir($basePath);
         while($childDirectory = readdir($dir)) {
             if (!($childDirectory == '.' || $childDirectory == '..')) {
-                return $childDirectory;
+                return $basePath.'/'.$childDirectory;
             }
         }
 
