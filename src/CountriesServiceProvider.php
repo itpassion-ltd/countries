@@ -25,7 +25,7 @@ class CountriesServiceProvider extends ServiceProvider
         ], 'countries-config');
 
         $this->publishesMigrations([
-            __DIR__.'/../database/create_countries_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_countries_table.php'),
+            __DIR__.'/../database/create_currencies_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_currencies_table.php'),
         ], 'countries-migrations');
     }
 
