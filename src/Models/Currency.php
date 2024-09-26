@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Currency extends Model
 {
-    protected $fillable = [];
+    protected $fillable = ['alpha_3', 'minor_name', 'minor_symbol', 'minor_unit', 'major_name', 'major_symbol', 'numeric'];
 
-    protected $guarded = [];
+    public function getTable()
+    {
+        return config('itpassion-ltd-countries.table_prefix').'currencies';
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace ItpassionLtd\Countries\Concerns;
 
+use ItpassionLtd\Countries\Models\Currency;
+
 trait StoreData
 {
     /**
@@ -21,9 +23,19 @@ trait StoreData
             if($fileName !== '.' && $fileName !== '..') {
                 $jsonString = file_get_contents($currenciesDirectoryName.'/'.$fileName);
                 $currencyJson = json_decode($jsonString, true);
-                dd($currencyJson);
+                Currency::updateOrCreate([
+                    'alpha_3' => $currencyJson['iso']['code'],
+                    'minor_name' => $currencyJson['units']['minor']['name'],
+                    'minor_symbol' => $currencyJson['units']['minor']['symbol'],
+                    'minor_unit' => $currencyJson['units']['minor']['majorValue'],
+                    'major_name' => $currencyJson['units']['major']['name'],
+                    'major_symbol' => $currencyJson['units']['major']['symbol'],
+                    'numeric' => $currencyJson['iso']['number'],
+                ]);
             }
         }
+        closedir($currenciesDirectory);
+
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
     }

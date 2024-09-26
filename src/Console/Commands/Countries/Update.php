@@ -3,7 +3,7 @@
 namespace ItpassionLtd\Countries\Console\Commands\Countries;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use ItpassionLtd\Countries\Concerns\DownloadAntonioRibeiroCountries;
 use ItpassionLtd\Countries\Concerns\StoreData;
 use ItpassionLtd\Countries\Concerns\UnzipRepository;
@@ -31,7 +31,7 @@ class Update extends Command
      */
     public function handle()
     {
-        if(!DB::table(config('itpassion-ltd-countries.table_prefix').'currencies')) {
+        if(!Schema::hasTable(config('itpassion-ltd-countries.table_prefix').'currencies')) {
             $this->components->error('Cannot find the currencies table. Please make sure you run the migrations!');
             exit(self::FAILURE);
         }
