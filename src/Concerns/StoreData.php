@@ -27,10 +27,10 @@ trait StoreData
                     'alpha_3' => $currencyJson['iso']['code'],
                     'minor_name' => $currencyJson['units']['minor']['name'],
                     'minor_symbol' => $currencyJson['units']['minor']['symbol'],
-                    'minor_unit' => $currencyJson['units']['minor']['majorValue'],
+                    'minor_unit' => (float) ($currencyJson['units']['minor']['majorValue'] !== '' ? $currencyJson['units']['minor']['majorValue'] : 0.00),
                     'major_name' => $currencyJson['units']['major']['name'],
                     'major_symbol' => $currencyJson['units']['major']['symbol'],
-                    'numeric' => $currencyJson['iso']['number'],
+                    'numeric' => (string) $currencyJson['iso']['number'],
                 ]);
             }
         }
