@@ -10,8 +10,9 @@
         }
     ],
     "require": {
+        "ext-zip": "*",
         "laravel/framework": "^11.0",
-        "ext-zip": "*"
+        "php": "^8.3"
     },
     "autoload": {
         "psr-4": {

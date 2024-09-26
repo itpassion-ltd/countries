@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create(config('itpassion-ltd-countries.table_prefix').'currencies', function (Blueprint $table) {
             $table->id();
-            $table->string('alpha_3', 3);
-            $table->unsignedSmallInteger('minor_unit');
-            $table->string('name');
-            $table->string('numeric', 3);
+            $table->string('alpha_3', 3)
+                ->unique();
+            $table->string('minor_name');
+            $table->string('minor_symbol')
+                ->nullable();
+            $table->float('minor_unit', 4);
+            $table->string('major_name');
+            $table->string('major_symbol');
+            $table->string('numeric', 3)
+                ->unique();
             $table->timestamps();
         });
     }
