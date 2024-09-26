@@ -15,6 +15,15 @@ trait StoreData
         $this->output->write('         Storing currencies ... ');
         $start = microtime(true);
 
+        $currenciesDirectoryName = $baseDirectory.'/src/data/currencies/default';
+        $currenciesDirectory = opendir($currenciesDirectoryName);
+        while($fileName = readdir($currenciesDirectory)) {
+            if($fileName !== '.' && $fileName !== '..') {
+                $jsonString = file_get_contents($currenciesDirectoryName.'/'.$fileName);
+                $currencyJson = json_decode($jsonString, true);
+                dd($currencyJson);
+            }
+        }
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
     }
