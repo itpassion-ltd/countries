@@ -97,7 +97,7 @@ trait StoreData
 
                 $intermediateRegionStr = $countryJson['geo']['region_wb'];
                 if($intermediateRegionStr !== '' && $intermediateRegionStr !== null) {
-                    $intermediateRegion = Region::create([
+                    $intermediateRegion = Region::updateOrCreate([
                         'name' => $intermediateRegionStr,
                     ], [
                         'parent_region_id' => $region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id),
