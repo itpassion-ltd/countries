@@ -3,6 +3,7 @@
 namespace ItpassionLtd\Countries\Concerns;
 
 use ItpassionLtd\Countries\Models\Currency;
+use ItpassionLtd\Countries\Models\Region;
 
 trait StoreData
 {
@@ -42,6 +43,49 @@ trait StoreData
     }
 
     /**
+     * Store the region data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeRegions(string $baseDirectory):void
+    {
+        $this->output->write('         Storing currencies ... ');
+        $start = microtime(true);
+
+        $worldRegion = Region::updateOrCreate([
+            'name' => 'World',
+            'parent_region_id' => null,
+            'un_numeric' => '001',
+        ]);
+
+        $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
+        $countriesDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countriesDirectory)) {
+            $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
+            $countryJson = json_decode($jsonString, true);
+
+            $intermediateRegion = null;
+            $region = null;
+            $subRegion = null;
+            $theaterRegion = null;
+
+            $theaterRegionStr = $countryJson['geo']['world_region'];
+            if($theaterRegionStr !== '' && $theaterRegionStr !== null) {
+                $theaterRegion = Region::updateOrCreate([
+                    'name' => $theaterRegionStr,
+                    'parent_region_id' => $worldRegion->id,
+                    'un_numeric' => null,
+                ]);
+            }
+        }
+        closedir($countriesDirectory);
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
+    /**
      * Store all the data in the database.
      *
      * @param string $baseDirectory
@@ -50,5 +94,6 @@ trait StoreData
     protected function storeData(string $baseDirectory): void
     {
         $this->storeCurrencies($baseDirectory);
+        $this->storeRegions($baseDirectory);
     }
 }

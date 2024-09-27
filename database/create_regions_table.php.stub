@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create(config('itpassion-ltd-countries.table_prefix').'regions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')
+                ->unique();
+            $table->string('un_numeric', 3)
+                ->nullable();
+            $table->timestamps();
+        });
+
+        Schema::table(config('itpassion-ltd-countries.table_prefix').'regions', function (Blueprint $table) {
+            $table->foreignId('parent_region_id')
+                ->after('id')
+                ->nullable()
+                ->constrained('regions')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(config('itpassion-ltd-countries.table_prefix').'regions');
+    }
+};
