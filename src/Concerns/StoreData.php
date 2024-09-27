@@ -64,7 +64,7 @@ trait StoreData
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
         $countriesDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countriesDirectory)) {
-            if($fileName !== '.' && $fileName !== '..') {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
 
                 Log::debug('Opening file "' . $countriesDirectoryName . '/' . $fileName . '".');
                 $jsonString = file_get_contents($countriesDirectoryName . '/' . $fileName);
