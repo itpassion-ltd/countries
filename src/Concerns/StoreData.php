@@ -75,7 +75,7 @@ trait StoreData
                 $subRegion = null;
                 $theaterRegion = null;
 
-                $theaterRegionStr = $countryJson['geo']['world_region'];
+                $theaterRegionStr = $countryJson['geo']['world_region'] ?? null;
                 if($theaterRegionStr !== '' && $theaterRegionStr !== null) {
                     $theaterRegion = Region::updateOrCreate([
                         'name' => $theaterRegionStr,
