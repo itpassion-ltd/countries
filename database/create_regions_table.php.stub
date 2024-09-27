@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('parent_region_id')
                 ->after('id')
                 ->nullable()
-                ->constrained('regions')
+                ->constrained(config('itpassion-ltd-countries.table_prefix').'regions')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
         });
