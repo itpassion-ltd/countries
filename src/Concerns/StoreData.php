@@ -55,6 +55,7 @@ trait StoreData
 
         $worldRegion = Region::updateOrCreate([
             'name' => 'World',
+        ], [
             'parent_region_id' => null,
             'un_numeric' => '001',
         ]);
@@ -76,6 +77,39 @@ trait StoreData
                     'name' => $theaterRegionStr,
                     'parent_region_id' => $worldRegion->id,
                     'un_numeric' => null,
+                ]);
+            }
+
+            $regionStr = $countryJson['geo']['region'];
+            $regionCodeStr = $countryJson['geo']['region_code'] ?? null;
+            if($regionStr !== '' && $regionStr !== null) {
+                $region = Region::updateOrCreate([
+                    'name' => $regionStr,
+                ], [
+                    'parent_region_id' => $theaterRegion !== null ? $theaterRegion->id : $worldRegion->id,
+                    'un_numeric' => $regionCodeStr,
+                ]);
+            }
+
+            $intermediateRegionStr = $countryJson['geo']['region_wb'];
+            if($intermediateRegionStr !== '' && $intermediateRegionStr !== null) {
+                $intermediateRegion = Region::create([
+                    'name' => $intermediateRegionStr,
+                ], [
+                    'parent_region_id' => $region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id),
+                    'un_numeric' => null,
+                ]);
+            }
+
+            $subRegionStr = $countryJson['geo']['subregion'];
+            $subRegionCodeStr = $countryJson['geo']['subregion_code'] ?? null;
+            if($subRegionStr !== '' && $subRegionStr !== null) {
+                $subRegion = Region::updateOrCreate([
+                    'name' => $subRegionStr,
+                ], [
+                    'parent_region_id' => $intermediateRegion !== null ? $intermediateRegion->id :
+                        ($region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id)),
+                    'un_numeric' => $subRegionCodeStr,
                 ]);
             }
         }
