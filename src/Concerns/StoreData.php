@@ -2,6 +2,7 @@
 
 namespace ItpassionLtd\Countries\Concerns;
 
+use Illuminate\Support\Facades\Log;
 use ItpassionLtd\Countries\Models\Currency;
 use ItpassionLtd\Countries\Models\Region;
 
@@ -67,6 +68,7 @@ trait StoreData
                 continue;
             }
 
+            Log::debug('Opening file "'.$countriesDirectoryName.'/'.$fileName.'".');
             $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
             $countryJson = json_decode($jsonString, true);
 
