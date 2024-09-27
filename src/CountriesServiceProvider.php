@@ -22,11 +22,11 @@ class CountriesServiceProvider extends ServiceProvider
         $migrationsDirectory = opendir($migrationsDirectoryName);
         while ($file = readdir($migrationsDirectory)) {
             if ($file !== '.' || $file !== '..') {
-                if(Str::contains('continents', $file)) {
+                if(Str::contains($file, 'continents')) {
                     unset($migrations[__DIR__.'/../database/create_continents_table.php.stub']);
-                } elseif(Str::contains('currencies', $file)) {
+                } elseif(Str::contains($file, 'currencies')) {
                     unset($migrations[__DIR__ . '/../database/create_currencies_table.php.stub']);
-                } elseif(Str::contains('regions', $file)) {
+                } elseif(Str::contains($file, 'regions')) {
                     unset($migrations[__DIR__.'/../database/create_regions_table.php.stub']);
                 }
             }
