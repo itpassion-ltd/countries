@@ -64,59 +64,58 @@ trait StoreData
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
         $countriesDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countriesDirectory)) {
-            if($fileName === '.' && $fileName === '..') {
-                continue;
-            }
+            if($fileName !== '.' && $fileName !== '..') {
 
-            Log::debug('Opening file "'.$countriesDirectoryName.'/'.$fileName.'".');
-            $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
-            $countryJson = json_decode($jsonString, true);
+                Log::debug('Opening file "' . $countriesDirectoryName . '/' . $fileName . '".');
+                $jsonString = file_get_contents($countriesDirectoryName . '/' . $fileName);
+                $countryJson = json_decode($jsonString, true);
 
-            $intermediateRegion = null;
-            $region = null;
-            $subRegion = null;
-            $theaterRegion = null;
+                $intermediateRegion = null;
+                $region = null;
+                $subRegion = null;
+                $theaterRegion = null;
 
-            $theaterRegionStr = $countryJson['geo']['world_region'];
-            if($theaterRegionStr !== '' && $theaterRegionStr !== null) {
-                $theaterRegion = Region::updateOrCreate([
-                    'name' => $theaterRegionStr,
-                    'parent_region_id' => $worldRegion->id,
-                    'un_numeric' => null,
-                ]);
-            }
+                $theaterRegionStr = $countryJson['geo']['world_region'];
+                if($theaterRegionStr !== '' && $theaterRegionStr !== null) {
+                    $theaterRegion = Region::updateOrCreate([
+                        'name' => $theaterRegionStr,
+                        'parent_region_id' => $worldRegion->id,
+                        'un_numeric' => null,
+                    ]);
+                }
 
-            $regionStr = $countryJson['geo']['region'];
-            $regionCodeStr = $countryJson['geo']['region_code'] ?? null;
-            if($regionStr !== '' && $regionStr !== null) {
-                $region = Region::updateOrCreate([
-                    'name' => $regionStr,
-                ], [
-                    'parent_region_id' => $theaterRegion !== null ? $theaterRegion->id : $worldRegion->id,
-                    'un_numeric' => $regionCodeStr,
-                ]);
-            }
+                $regionStr = $countryJson['geo']['region'];
+                $regionCodeStr = $countryJson['geo']['region_code'] ?? null;
+                if($regionStr !== '' && $regionStr !== null) {
+                    $region = Region::updateOrCreate([
+                        'name' => $regionStr,
+                    ], [
+                        'parent_region_id' => $theaterRegion !== null ? $theaterRegion->id : $worldRegion->id,
+                        'un_numeric' => $regionCodeStr,
+                    ]);
+                }
 
-            $intermediateRegionStr = $countryJson['geo']['region_wb'];
-            if($intermediateRegionStr !== '' && $intermediateRegionStr !== null) {
-                $intermediateRegion = Region::create([
-                    'name' => $intermediateRegionStr,
-                ], [
-                    'parent_region_id' => $region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id),
-                    'un_numeric' => null,
-                ]);
-            }
+                $intermediateRegionStr = $countryJson['geo']['region_wb'];
+                if($intermediateRegionStr !== '' && $intermediateRegionStr !== null) {
+                    $intermediateRegion = Region::create([
+                        'name' => $intermediateRegionStr,
+                    ], [
+                        'parent_region_id' => $region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id),
+                        'un_numeric' => null,
+                    ]);
+                }
 
-            $subRegionStr = $countryJson['geo']['subregion'];
-            $subRegionCodeStr = $countryJson['geo']['subregion_code'] ?? null;
-            if($subRegionStr !== '' && $subRegionStr !== null) {
-                $subRegion = Region::updateOrCreate([
-                    'name' => $subRegionStr,
-                ], [
-                    'parent_region_id' => $intermediateRegion !== null ? $intermediateRegion->id :
-                        ($region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id)),
-                    'un_numeric' => $subRegionCodeStr,
-                ]);
+                $subRegionStr = $countryJson['geo']['subregion'];
+                $subRegionCodeStr = $countryJson['geo']['subregion_code'] ?? null;
+                if($subRegionStr !== '' && $subRegionStr !== null) {
+                    $subRegion = Region::updateOrCreate([
+                        'name' => $subRegionStr,
+                    ], [
+                        'parent_region_id' => $intermediateRegion !== null ? $intermediateRegion->id :
+                            ($region !== null ? $region->id : ($theaterRegion !== null ? $theaterRegion->id : $worldRegion->id)),
+                        'un_numeric' => $subRegionCodeStr,
+                    ]);
+                }
             }
         }
         closedir($countriesDirectory);
