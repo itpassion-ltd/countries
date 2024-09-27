@@ -16,7 +16,7 @@ class CountriesServiceProvider extends ServiceProvider
         $migrations = [
             __DIR__.'/../database/create_continents_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_continents_table.php'),
             __DIR__.'/../database/create_currencies_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_currencies_table.php'),
-            __DIR__.'/../database/create_regions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_regionss_table.php'),
+            __DIR__.'/../database/create_regions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_regions_table.php'),
         ];
 
         $migrationsDirectoryName = database_path('migrations');

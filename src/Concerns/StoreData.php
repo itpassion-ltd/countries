@@ -50,7 +50,7 @@ trait StoreData
      */
     protected function storeRegions(string $baseDirectory):void
     {
-        $this->output->write('         Storing currencies ... ');
+        $this->output->write('         Storing regions ... ');
         $start = microtime(true);
 
         $worldRegion = Region::updateOrCreate([
@@ -63,6 +63,10 @@ trait StoreData
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
         $countriesDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countriesDirectory)) {
+            if($fileName === '.' && $fileName === '..') {
+                continue;
+            }
+
             $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
             $countryJson = json_decode($jsonString, true);
 
