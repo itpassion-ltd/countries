@@ -2,6 +2,7 @@
 
 namespace ItpassionLtd\Countries\Concerns;
 
+use Illuminate\Support\Facades\Log;
 use ItpassionLtd\Countries\Models\CallingCode;
 use ItpassionLtd\Countries\Models\Continent;
 use ItpassionLtd\Countries\Models\Currency;
@@ -25,6 +26,7 @@ trait StoreData
         $countryDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countryDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                Log::debug('Loading Calling Codes from "'.$fileName.'"');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
                 foreach(($countryJson['dialling']['calling_code'] ?? []) as $countryCallingCode) {
