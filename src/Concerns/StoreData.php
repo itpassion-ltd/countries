@@ -27,7 +27,7 @@ trait StoreData
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
-                foreach($countryJson['dialling']['calling_code'] as $countryCallingCode) {
+                foreach(($countryJson['dialling']['calling_code'] ?? []) as $countryCallingCode) {
                     CallingCode::updateOrCreate([
                         'calling_code' => '+'.$countryCallingCode
                     ]);
