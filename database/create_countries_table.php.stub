@@ -43,6 +43,8 @@ return new class extends Migration
                 ->default(0);
             $table->string('national_prefix')
                 ->nullable();
+            $table->boolean('uses_postal_code')
+                ->default(false);
             $table->timestamps();
         });
     }
