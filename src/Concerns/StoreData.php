@@ -3,8 +3,10 @@
 namespace ItpassionLtd\Countries\Concerns;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use ItpassionLtd\Countries\Models\CallingCode;
 use ItpassionLtd\Countries\Models\Continent;
+use ItpassionLtd\Countries\Models\Country;
 use ItpassionLtd\Countries\Models\Currency;
 use ItpassionLtd\Countries\Models\Nationality;
 use ItpassionLtd\Countries\Models\Region;
@@ -58,6 +60,52 @@ trait StoreData
                 'name' => $continentJson['name'],
             ]);
         }
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
+    /**
+     * Store the calling code data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeCountries(string $baseDirectory):void
+    {
+        $this->output->write('         Storing countries ... ');
+        $start = microtime(true);
+
+        $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
+        $countryDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countryDirectory)) {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                Log::debug('Loading countries file "'.$fileName.'".');
+                $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
+                $countryJson = json_decode($jsonString, true);
+                $nationality = Nationality::whereName($countryJson['demonym'])->first();
+                $region = Region::whereName($countryJson['geo']['subregion'])->first() ?? null;
+                Country::updateOrCreate([
+                    'iso_3166_1_alpha2' => $countryJson['iso_3166_1_alpha2'],
+                    'iso_3166_1_alpha3' => $countryJson['iso_3166_1_alpha3'],
+                    'iso_3166_1_numeric' => $countryJson['iso_3166_1_numeric'],
+                ], [
+                    'address_format' => $countryJson['extra']['address_format'] ?? null,
+                    'capital' => $countryJson['capital'][0],
+                    'flag_path' => public_path('vendor/countries/flags').'/'.Str::lower($countryJson['iso_3166_1_alpha3']).'.svg',
+                    'landlocked' => $countryJson['geo']['landlocked'] ?? false,
+                    'name_common' => $countryJson['name']['common'],
+                    'name_official' => $countryJson['name']['official'],
+                    'national_destination_code_length' => $countryJson['dialling']['national_destination_code_lengths'][0] ?? null,
+                    'national_number_length' => $countryJson['dialling']['national_number_lengths'][0] ?? null,
+                    'national_prefix' => $countryJson['dialling']['national_prefix'] ?? null,
+                    'nationality_id' => $nationality->id ?? null,
+                    'region_id' => $region->id ?? null,
+                    'uses_postal_code' => $countryJson['geo']['postal_code'] ?? false,
+                ]);
+            }
+        }
+        closedir($countryDirectory);
 
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
@@ -171,5 +219,7 @@ trait StoreData
         $this->storeCurrencies($baseDirectory);
         $this->storeNationalities($baseDirectory);
         $this->storeRegions();
+
+        $this->storeCountries($baseDirectory);
     }
 }

@@ -1,0 +1,57 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create(config('itpassion-ltd-countries.table_prefix').'countries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('nationality_id')
+                ->constrained(config('itpassion-ltd-countries.table_prefix').'nationalities')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
+            $table->foreignId('region_id')
+                ->nullable()
+                ->constrained(config('itpassion-ltd-countries.table_prefix').'regions')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
+            $table->string('address_format')
+                ->nullable();
+            $table->string('capital')
+                ->nullable();
+            $table->string('flag_path');
+            $table->string('iso_3166_1_alpha2', 2)
+                ->unique();
+            $table->string('iso_3166_1_alpha3', 3)
+                ->unique();
+            $table->string('iso_3166_1_numeric', 3)
+                ->unique();
+            $table->boolean('landlocked')
+                ->default(false);
+            $table->string('name_common');
+            $table->string('name_official');
+            $table->unsignedSmallInteger('national_destination_code_length')
+                ->default(0);
+            $table->unsignedSmallInteger('national_number_length')
+                ->default(0);
+            $table->string('national_prefix')
+                ->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(config('itpassion-ltd-countries.table_prefix').'countries');
+    }
+};
