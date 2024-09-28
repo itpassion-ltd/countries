@@ -2,6 +2,7 @@
 
 namespace ItpassionLtd\Countries\Concerns;
 
+use ItpassionLtd\Countries\Models\CallingCode;
 use ItpassionLtd\Countries\Models\Continent;
 use ItpassionLtd\Countries\Models\Currency;
 use ItpassionLtd\Countries\Models\Nationality;
@@ -9,6 +10,36 @@ use ItpassionLtd\Countries\Models\Region;
 
 trait StoreData
 {
+    /**
+     * Store the nationalities data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeCallingCodes(string $baseDirectory):void
+    {
+        $this->output->write('         Storing calling codes ... ');
+        $start = microtime(true);
+
+        $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
+        $countryDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countryDirectory)) {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
+                $countryJson = json_decode($jsonString, true);
+                foreach($countryJson['dialling']['calling_code'] as $countryCallingCode) {
+                    CallingCode::updateOrCreate([
+                        'calling_code' => '+'.$countryCallingCode
+                    ]);
+                }
+            }
+        }
+        closedir($countryDirectory);
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
     /**
      * Store the continent data in the database.
      *
@@ -134,6 +165,7 @@ trait StoreData
      */
     protected function storeData(string $baseDirectory): void
     {
+        $this->storeCallingCodes($baseDirectory);
         $this->storeContinents();
         $this->storeCurrencies($baseDirectory);
         $this->storeNationalities($baseDirectory);

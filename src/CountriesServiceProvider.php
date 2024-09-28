@@ -13,6 +13,7 @@ class CountriesServiceProvider extends ServiceProvider
     protected function advertiseUnpublishedMigrations(): void
     {
         $migrations = [
+            __DIR__.'/../database/create_calling_codes_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_calling_codes_table.php'),
             __DIR__.'/../database/create_continents_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_continents_table.php'),
             __DIR__.'/../database/create_currencies_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_currencies_table.php'),
             __DIR__.'/../database/create_nationalities_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_nationalities_table.php'),
@@ -23,7 +24,9 @@ class CountriesServiceProvider extends ServiceProvider
         $migrationsDirectory = opendir($migrationsDirectoryName);
         while ($file = readdir($migrationsDirectory)) {
             if ($file !== '.' || $file !== '..') {
-                if(Str::contains($file, 'continents')) {
+                if(Str::contains($file, 'calling_codes')) {
+                    unset($migrations[__DIR__ . '/../database/create_calling_codes_table.php.stub']);
+                } elseif(Str::contains($file, 'continents')) {
                     unset($migrations[__DIR__.'/../database/create_continents_table.php.stub']);
                 } elseif(Str::contains($file, 'currencies')) {
                     unset($migrations[__DIR__ . '/../database/create_currencies_table.php.stub']);
