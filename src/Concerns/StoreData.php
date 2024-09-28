@@ -12,7 +12,7 @@ use ItpassionLtd\Countries\Models\Region;
 trait StoreData
 {
     /**
-     * Store the nationalities data in the database.
+     * Store the calling code data in the database.
      *
      * @param string $baseDirectory
      * @return void
@@ -26,7 +26,6 @@ trait StoreData
         $countryDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countryDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
-                Log::debug('Loading Calling Codes from "'.$fileName.'"');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
                 foreach(($countryJson['dialling']['calling_code'] ?? []) as $countryCallingCode) {

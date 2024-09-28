@@ -40,6 +40,9 @@ class CountriesServiceProvider extends ServiceProvider
         closedir($migrationsDirectory);
 
         $this->publishesMigrations($migrations, 'countries-migrations');
+        $this->publishes([
+            __DIR__.'/../data/public' => public_path('vendor/countries'),
+        ], 'countries-assets');
     }
 
     public function boot(): void
