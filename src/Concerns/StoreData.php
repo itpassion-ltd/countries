@@ -2,9 +2,9 @@
 
 namespace ItpassionLtd\Countries\Concerns;
 
-use Illuminate\Support\Facades\Log;
 use ItpassionLtd\Countries\Models\Continent;
 use ItpassionLtd\Countries\Models\Currency;
+use ItpassionLtd\Countries\Models\Nationality;
 use ItpassionLtd\Countries\Models\Region;
 
 trait StoreData
@@ -67,6 +67,36 @@ trait StoreData
     }
 
     /**
+     * Store the nationalities data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeNationalities(string $baseDirectory):void
+    {
+        $this->output->write('         Storing nationalities ... ');
+        $start = microtime(true);
+
+        $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
+        $countryDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countryDirectory)) {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
+                $countryJson = json_decode($jsonString, true);
+                if(isset($countryJson['demonym']) && $countryJson['demonym'] !== '') {
+                    Nationality::updateOrCreate([
+                        'name' => $countryJson['demonym']
+                    ]);
+                }
+            }
+        }
+        closedir($countryDirectory);
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
+    /**
      * Store the region data in the database.
      *
      * @return void
@@ -106,6 +136,7 @@ trait StoreData
     {
         $this->storeContinents();
         $this->storeCurrencies($baseDirectory);
+        $this->storeNationalities($baseDirectory);
         $this->storeRegions();
     }
 }
