@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create(config('itpassion-ltd-countries.table_prefix').'countries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('nationality_id')
+                ->nullable()
                 ->constrained(config('itpassion-ltd-countries.table_prefix').'nationalities')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
