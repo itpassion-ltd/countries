@@ -83,8 +83,8 @@ trait StoreData
                 Log::debug('Loading countries file "'.$fileName.'".');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
-                $nationality = Nationality::whereName($countryJson['demonym'])->first();
-                $region = Region::whereName($countryJson['geo']['subregion'])->first() ?? null;
+                $nationality = Nationality::whereName($countryJson['demonym'] ?? '')->first();
+                $region = Region::whereName($countryJson['geo']['subregion'] ?? '')->first() ?? null;
                 Country::updateOrCreate([
                     'iso_3166_1_alpha2' => $countryJson['iso_3166_1_alpha2'],
                     'iso_3166_1_alpha3' => $countryJson['iso_3166_1_alpha3'],
