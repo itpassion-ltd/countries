@@ -80,7 +80,6 @@ trait StoreData
         $countryDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countryDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
-                Log::debug('Loading countries file "'.$fileName.'".');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
                 $nationality = Nationality::whereName($countryJson['demonym'] ?? '')->first();
