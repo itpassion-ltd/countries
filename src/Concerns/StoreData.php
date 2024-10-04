@@ -85,7 +85,11 @@ trait StoreData
                 $countryJson = json_decode($jsonString, true);
                 $nationality = Nationality::whereName($countryJson['demonym'] ?? '')->first();
                 $region = Region::whereName($countryJson['geo']['subregion'] ?? '')->first() ?? null;
-                if(($countryJson['iso_3166_1_alpha2'] ?? null) !== null) {
+                if(
+                    ($countryJson['iso_3166_1_alpha2'] ?? null) !== null &&
+                    ($countryJson['iso_3166_1_alpha3'] ?? null) !== null &&
+                    ($countryJson['iso_3166_1_numeric'] ?? null) !== null
+                ) {
                     Country::updateOrCreate([
                         'iso_3166_1_alpha2' => $countryJson['iso_3166_1_alpha2'],
                         'iso_3166_1_alpha3' => $countryJson['iso_3166_1_alpha3'],
