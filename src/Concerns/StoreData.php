@@ -32,12 +32,14 @@ trait StoreData
                 Log::debug('Loading subdivisions from file "'.$fileName.'".');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
-                $country = Country::where('iso_3166_1_alpha3', $countryJson['iso_3166_1_alpha3'])->first();
-                if($country) {
-                    foreach($countryJson['borders'] as $neighborCountryIso31661Alpha3) {
-                        $neighborCountry = Country::where('iso_3166_1_alpha3', $neighborCountryIso31661Alpha3)->first();
-                        if($neighborCountry) {
-                            $country->neighbors()->attach($neighborCountry);
+                if(($countryJson['iso_3166_1_alpha3'] ?? null) !== null) {
+                    $country = Country::where('iso_3166_1_alpha3', $countryJson['iso_3166_1_alpha3'])->first();
+                    if($country) {
+                        foreach($countryJson['borders'] as $neighborCountryIso31661Alpha3) {
+                            $neighborCountry = Country::where('iso_3166_1_alpha3', $neighborCountryIso31661Alpha3)->first();
+                            if($neighborCountry) {
+                                $country->neighbors()->attach($neighborCountry);
+                            }
                         }
                     }
                 }
