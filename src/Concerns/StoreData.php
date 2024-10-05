@@ -234,13 +234,15 @@ trait StoreData
                 foreach($subdivisionsJson as $subdivisionJson) {
                     if($subdivisionJson['type'] !== '' && $subdivisionJson['type_en'] !== '') {
                         $country = Country::where('iso_3166_1_alpha3', $subdivisionJson['iso_a3'])->first();
-                        Subdivision::updateOrCreate([
-                            'iso_3166_2' => $subdivisionJson['iso_3166_2'],
-                        ], [
-                            'country_id' => $country->id,
-                            'name' => $subdivisionJson['name'],
-                            'type' => $subdivisionJson['type_en'],
-                        ]);
+                        if($country) {
+                            Subdivision::updateOrCreate([
+                                'iso_3166_2' => $subdivisionJson['iso_3166_2'],
+                            ], [
+                                'country_id' => $country->id,
+                                'name' => $subdivisionJson['name'],
+                                'type' => $subdivisionJson['type_en'],
+                            ]);
+                        }
                     }
                 }
             }
