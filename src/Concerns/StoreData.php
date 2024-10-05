@@ -229,17 +229,18 @@ trait StoreData
         $subdivisionsDirectory = opendir($subdivisionsDirectoryName);
         while($fileName = readdir($subdivisionsDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                Log::debug('Loading subdivisions from file "'.$fileName.'".');
                 $jsonString = file_get_contents($subdivisionsDirectoryName.'/'.$fileName);
                 $subdivisionsJson = json_decode($jsonString, true);
                 foreach($subdivisionsJson as $subdivisionJson) {
-                    if($subdivisionJson['type'] !== '' && $subdivisionJson['type_en'] !== '') {
+                    if(($subdivisionJson['type'] ?? '') !== '' && ($subdivisionJson['type_en'] ?? '') !== '') {
                         $country = Country::where('iso_3166_1_alpha3', $subdivisionJson['iso_a3'])->first();
                         if($country) {
                             Subdivision::updateOrCreate([
                                 'iso_3166_2' => $subdivisionJson['iso_3166_2'],
                             ], [
                                 'country_id' => $country->id,
-                                'name' => $subdivisionJson['name'],
+                                'name' => $subdivisionJson['extra']['name_en'],
                                 'type' => $subdivisionJson['type_en'],
                             ]);
                         }
