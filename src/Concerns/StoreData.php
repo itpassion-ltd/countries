@@ -29,7 +29,6 @@ trait StoreData
         $countriesDirectory = opendir($countriesDirectoryName);
         while($fileName = readdir($countriesDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
-                Log::debug('Loading subdivisions from file "'.$fileName.'".');
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
                 if(($countryJson['iso_3166_1_alpha3'] ?? null) !== null) {
