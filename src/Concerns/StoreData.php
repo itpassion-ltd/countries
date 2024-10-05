@@ -233,7 +233,7 @@ trait StoreData
                 $subdivisionsJson = json_decode($jsonString, true);
                 foreach($subdivisionsJson as $subdivisionJson) {
                     if($subdivisionJson['type'] !== '' && $subdivisionJson['type_en'] !== '') {
-                        $country = Country::where('iso_3166_1_alpha_3', $subdivisionJson['iso_a3'])->first();
+                        $country = Country::where('iso_3166_1_alpha3', $subdivisionJson['iso_a3'])->first();
                         Subdivision::updateOrCreate([
                             'iso_3166_2' => $subdivisionJson['iso_3166_2'],
                         ], [
