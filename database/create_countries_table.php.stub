@@ -38,9 +38,9 @@ return new class extends Migration
                 ->default(false);
             $table->string('name_common');
             $table->string('name_official');
-            $table->unsignedSmallInteger('national_destination_code_length')
+            $table->unsignedSmallInteger('national_destination_code_lengths')
                 ->default(0);
-            $table->unsignedSmallInteger('national_number_length')
+            $table->unsignedSmallInteger('national_number_lengths')
                 ->default(0);
             $table->string('national_prefix')
                 ->nullable();

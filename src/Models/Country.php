@@ -9,7 +9,7 @@ class Country extends Model
 {
     protected $fillable = [
         'address_format', 'capital', 'flag_path', 'iso_3166_1_alpha2', 'iso_3166_1_alpha3', 'iso_3166_1_numeric', 'landlocked', 'name_common', 'name_official',
-        'national_destination_code_length', 'national_number_length', 'national_prefix', 'nationality_id', 'region_id', 'uses_postal_code',
+        'national_destination_code_lengths', 'national_number_lengths', 'national_prefix', 'nationality_id', 'region_id', 'uses_postal_code',
     ];
 
     /**
