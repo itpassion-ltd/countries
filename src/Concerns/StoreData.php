@@ -35,12 +35,14 @@ trait StoreData
                 if(($countryJson['iso_3166_1_alpha3'] ?? null) !== null) {
                     $country = Country::where('iso_3166_1_alpha3', $countryJson['iso_3166_1_alpha3'])->first();
                     if($country) {
+                        $neighbors = [];
                         foreach($countryJson['borders'] as $neighborCountryIso31661Alpha3) {
                             $neighborCountry = Country::where('iso_3166_1_alpha3', $neighborCountryIso31661Alpha3)->first();
                             if($neighborCountry) {
-                                $country->neighbors()->attach($neighborCountry);
+                                $neighbors[] = $neighborCountry->id;
                             }
                         }
+                        $country->neighbors()->sync($neighbors);
                     }
                 }
             }
