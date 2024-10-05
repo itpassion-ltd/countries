@@ -237,6 +237,7 @@ trait StoreData
                         Subdivision::updateOrCreate([
                             'iso_3166_2' => $subdivisionJson['iso_3166_2'],
                         ], [
+                            'country_id' => $country->id,
                             'name' => $subdivisionJson['name'],
                             'type' => $subdivisionJson['type_en'],
                         ]);

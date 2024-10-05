@@ -10,7 +10,7 @@ class Subdivision extends Model
     /**
      * @inheritdoc
      */
-    protected $fillable = ['iso_3166_2', 'name', 'type'];
+    protected $fillable = ['country_id', 'iso_3166_2', 'name', 'type'];
 
     /**
      * @inheritdoc
