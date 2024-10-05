@@ -4,9 +4,13 @@ namespace ItpassionLtd\Countries\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Country extends Model
 {
+    /**
+     * @inheritdoc
+     */
     protected $fillable = [
         'address_format', 'capital', 'flag_path', 'iso_3166_1_alpha2', 'iso_3166_1_alpha3', 'iso_3166_1_numeric', 'landlocked', 'name_common', 'name_official',
         'national_destination_code_lengths', 'national_number_lengths', 'national_prefix', 'nationality_id', 'region_id', 'uses_postal_code',
@@ -28,5 +32,10 @@ class Country extends Model
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function subdivisions(): HasMany
+    {
+        return $this->hasMany(Subdivision::class);
     }
 }

@@ -19,6 +19,7 @@ class CountriesServiceProvider extends ServiceProvider
             __DIR__.'/../database/create_currencies_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_currencies_table.php'),
             __DIR__.'/../database/create_nationalities_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_nationalities_table.php'),
             __DIR__.'/../database/create_regions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_regions_table.php'),
+            __DIR__.'/../database/create_subdivisions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His').'_create_subdivisions_table.php'),
         ];
 
         $migrationsDirectoryName = database_path('migrations');
@@ -37,6 +38,8 @@ class CountriesServiceProvider extends ServiceProvider
                     unset($migrations[__DIR__ . '/../database/create_nationalities_table.php.stub']);
                 } elseif(Str::contains($file, 'regions')) {
                     unset($migrations[__DIR__.'/../database/create_regions_table.php.stub']);
+                } elseif(Str::contains($file, 'subdivisions')) {
+                    unset($migrations[__DIR__.'/../database/create_subdivisions_table.php.stub']);
                 }
             }
         }

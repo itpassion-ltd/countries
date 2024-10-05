@@ -10,6 +10,7 @@ use ItpassionLtd\Countries\Models\Country;
 use ItpassionLtd\Countries\Models\Currency;
 use ItpassionLtd\Countries\Models\Nationality;
 use ItpassionLtd\Countries\Models\Region;
+use ItpassionLtd\Countries\Models\Subdivision;
 
 trait StoreData
 {
@@ -25,8 +26,8 @@ trait StoreData
         $start = microtime(true);
 
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
-        $countryDirectory = opendir($countriesDirectoryName);
-        while($fileName = readdir($countryDirectory)) {
+        $countriesDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countriesDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
@@ -37,7 +38,7 @@ trait StoreData
                 }
             }
         }
-        closedir($countryDirectory);
+        closedir($countriesDirectory);
 
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
@@ -77,8 +78,8 @@ trait StoreData
         $start = microtime(true);
 
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
-        $countryDirectory = opendir($countriesDirectoryName);
-        while($fileName = readdir($countryDirectory)) {
+        $countriesDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countriesDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
@@ -112,7 +113,7 @@ trait StoreData
                 }
             }
         }
-        closedir($countryDirectory);
+        closedir($countriesDirectory);
 
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
@@ -165,8 +166,8 @@ trait StoreData
         $start = microtime(true);
 
         $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
-        $countryDirectory = opendir($countriesDirectoryName);
-        while($fileName = readdir($countryDirectory)) {
+        $countriesDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countriesDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
                 $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
                 $countryJson = json_decode($jsonString, true);
@@ -177,7 +178,7 @@ trait StoreData
                 }
             }
         }
-        closedir($countryDirectory);
+        closedir($countriesDirectory);
 
         $duration = microtime(true) - $start;
         $this->output->writeLn('done ('.$duration.'s)');
@@ -214,6 +215,42 @@ trait StoreData
     }
 
     /**
+     * Store subdivision data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeSubdivisions(string $baseDirectory): void
+    {
+        $this->output->write('         Storing subdivisions ... ');
+        $start = microtime(true);
+
+        $subdivisionsDirectoryName = $baseDirectory.'/src/data/states/default';
+        $subdivisionsDirectory = opendir($subdivisionsDirectoryName);
+        while($fileName = readdir($subdivisionsDirectory)) {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                $jsonString = file_get_contents($subdivisionsDirectoryName.'/'.$fileName);
+                $subdivisionsJson = json_decode($jsonString, true);
+                foreach($subdivisionsJson as $subdivisionJson) {
+                    if($subdivisionJson['type'] !== '' && $subdivisionJson['type_en'] !== '') {
+                        $country = Country::where('iso_3166_1_alpha_3', $subdivisionJson['iso_a3'])->first();
+                        Subdivision::updateOrCreate([
+                            'iso_3166_2' => $subdivisionJson['iso_3166_2'],
+                        ], [
+                            'name' => $subdivisionJson['name'],
+                            'type' => $subdivisionJson['type_en'],
+                        ]);
+                    }
+                }
+            }
+        }
+        closedir($subdivisionsDirectory);
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
+    /**
      * Store all the data in the database.
      *
      * @param string $baseDirectory
@@ -228,5 +265,6 @@ trait StoreData
         $this->storeRegions();
 
         $this->storeCountries($baseDirectory);
+        $this->storeSubdivisions($baseDirectory);
     }
 }
