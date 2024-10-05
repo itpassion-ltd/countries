@@ -21,7 +21,7 @@ return new class extends Migration
                 ->constrained(config('itpassion-ltd-countries.table_prefix').'countries')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
-            $table->unique(['country_id', 'neighbor_country_id']);
+            $table->unique(['country_id', 'neighbor_country_id'], 'borders_country_id_neighbor_country_id_unique');
             $table->timestamps();
         });
     }
