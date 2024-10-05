@@ -15,6 +15,41 @@ use ItpassionLtd\Countries\Models\Subdivision;
 trait StoreData
 {
     /**
+     * Store neighboring country (aka `borders`) data in the database.
+     *
+     * @param string $baseDirectory
+     * @return void
+     */
+    protected function storeBorders(string $baseDirectory): void
+    {
+        $this->output->write('         Storing neighbor countries ... ');
+        $start = microtime(true);
+
+        $countriesDirectoryName = $baseDirectory.'/src/data/countries/default';
+        $countriesDirectory = opendir($countriesDirectoryName);
+        while($fileName = readdir($countriesDirectory)) {
+            if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
+                Log::debug('Loading subdivisions from file "'.$fileName.'".');
+                $jsonString = file_get_contents($countriesDirectoryName.'/'.$fileName);
+                $countryJson = json_decode($jsonString, true);
+                $country = Country::where('iso_3166_1_alpha3', $countryJson['iso_3166_1_alpha3'])->first();
+                if($country) {
+                    foreach($countryJson['borders'] as $neighborCountryIso31661Alpha3) {
+                        $neighborCountry = Country::where('iso_3166_1_alpha3', $neighborCountryIso31661Alpha3)->first();
+                        if($neighborCountry) {
+                            $country->neighbors()->attach($neighborCountry);
+                        }
+                    }
+                }
+            }
+        }
+        closedir($countriesDirectory);
+
+        $duration = microtime(true) - $start;
+        $this->output->writeLn('done ('.$duration.'s)');
+    }
+
+    /**
      * Store the calling code data in the database.
      *
      * @param string $baseDirectory
@@ -229,7 +264,6 @@ trait StoreData
         $subdivisionsDirectory = opendir($subdivisionsDirectoryName);
         while($fileName = readdir($subdivisionsDirectory)) {
             if($fileName !== '.' && $fileName !== '..' && $fileName !== '_all_countries.json') {
-                Log::debug('Loading subdivisions from file "'.$fileName.'".');
                 $jsonString = file_get_contents($subdivisionsDirectoryName.'/'.$fileName);
                 $subdivisionsJson = json_decode($jsonString, true);
                 foreach($subdivisionsJson as $subdivisionJson) {
@@ -270,5 +304,6 @@ trait StoreData
 
         $this->storeCountries($baseDirectory);
         $this->storeSubdivisions($baseDirectory);
+        $this->storeBorders($baseDirectory);
     }
 }
