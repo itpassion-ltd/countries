@@ -28,12 +28,14 @@ class Update extends Command
 
     /**
      * Execute the console command.
+     *
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         if(!Schema::hasTable(config('itpassion-ltd-countries.table_prefix').'currencies')) {
             $this->components->error('Cannot find the currencies table. Please make sure you run the migrations!');
-            exit(self::FAILURE);
+            return self::FAILURE;
         }
 
         try {
@@ -44,10 +46,10 @@ class Update extends Command
             $this->components->info('Storing data in the database ...');
             $this->storeData($directory);
             $this->components->success('Countries information successfully updated.');
-            exit(self::SUCCESS);
+            return self::SUCCESS;
         } catch(\Exception $exception) {
             $this->components->error('The update failed: "' . $exception->getMessage() . '"');
-            exit(self::FAILURE);
+            return self::FAILURE;
         }
     }
 }
