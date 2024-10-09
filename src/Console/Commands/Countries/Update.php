@@ -45,6 +45,8 @@ class Update extends Command
             $directory = $this->unzipRepository($zipFileName);
             $this->components->info('Storing data in the database ...');
             $this->storeData($directory);
+            $this->components->info('Cleaning up unnecessary data ...');
+            $this->unlinkData($directory, $zipFileName);
             $this->components->success('Countries information successfully updated.');
             return self::SUCCESS;
         } catch(\Exception $exception) {

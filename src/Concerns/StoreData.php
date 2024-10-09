@@ -15,6 +15,29 @@ use ItpassionLtd\Countries\Models\Subdivision;
 trait StoreData
 {
     /**
+     * Remove the directory after it was cleaned up.
+     *
+     * @param $directory
+     * @return void
+     */
+    protected function recursiveRemoveDirectory($directory): void
+    {
+        $directoryHandle = opendir($directory);
+        while($directoryEntry = readdir($directoryHandle)) {
+            if($directoryEntry !== '.' && $directoryEntry !== '..') {
+                if(is_dir($directory.'/'.$directoryEntry)) {
+                    $this->recursiveRemoveDirectory($directory.'/'.$directoryEntry);
+                } else {
+                    unlink($directory.'/'.$directoryEntry);
+                }
+            }
+        }
+        closedir($directoryHandle);
+
+        rmdir($directory);
+    }
+
+    /**
      * Store neighboring country (aka `borders`) data in the database.
      *
      * @param string $baseDirectory
@@ -308,5 +331,23 @@ trait StoreData
         $this->storeCountries($baseDirectory);
         $this->storeSubdivisions($baseDirectory);
         $this->storeBorders($baseDirectory);
+    }
+
+    /**
+     * Remove the downloaded and extracted data from the storage folder.
+     *
+     * @param string $baseDirectory
+     * @param string $zipFile
+     * @return void
+     */
+    protected function unlinkData(string $baseDirectory, string $zipFile): void
+    {
+        if(is_file($zipFile)) {
+            unlink($zipFile);
+        }
+
+        if(is_dir($baseDirectory)) {
+            $this->recursiveRemoveDirectory($baseDirectory);
+        }
     }
 }
