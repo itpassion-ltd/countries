@@ -11,25 +11,9 @@ class Currency extends Model
     /**
      * @inheritdoc
      */
-    protected $appends = ['html_entity'];
-
-    /**
-     * @inheritdoc
-     */
-    protected $fillable = ['alpha_3', 'minor_name', 'minor_symbol', 'minor_unit', 'major_name', 'major_symbol', 'numeric'];
-
-    /**
-     * Get the htmlEntity for the Unicode symbol
-     * @return Attribute
-     */
-    protected function htmlEntity(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                return Str::replace('/\\u([0-9a-fA-F]{4})/', '&#x$1;', $this->major_symbol);
-            }
-        );
-    }
+    protected $fillable = [
+        'alpha_3', 'html_entity', 'minor_name', 'minor_symbol', 'minor_unit', 'major_name','major_symbol', 'numeric',
+    ];
 
     /**
      * @inheritdoc

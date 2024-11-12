@@ -197,6 +197,10 @@ trait StoreData
             if($fileName !== '.' && $fileName !== '..') {
                 $jsonString = file_get_contents($currenciesDirectoryName.'/'.$fileName);
                 $currencyJson = json_decode($jsonString, true);
+                $majorSymbol = $currencyJson['units']['major']['symbol'];
+                if($majorSymbol !== '' && $majorSymbol !== null) {
+                    $htmlEntity = Str::replace('/\\u([0-9a-fA-F]{4})/', '&#x$1;', $majorSymbol);
+                }
                 Currency::updateOrCreate([
                     'alpha_3' => $currencyJson['iso']['code'],
                     'numeric' => (string) $currencyJson['iso']['number'],

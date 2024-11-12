@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('alpha_3', 3)
                 ->unique();
+            $table->string('html_entity')
+                ->nullable();
             $table->string('minor_name');
             $table->string('minor_symbol')
                 ->nullable();
