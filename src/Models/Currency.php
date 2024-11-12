@@ -25,7 +25,7 @@ class Currency extends Model
     protected function htmlEntity(): Attribute
     {
         return Attribute::make(
-            get: function (string $value) {
+            get: function (?string $value = null) {
                 return Str::replace('/\\u([0-9a-fA-F]{4})/', '&#x$1;', $this->major_symbol);
             }
         );
