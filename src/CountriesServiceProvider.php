@@ -26,7 +26,7 @@ class CountriesServiceProvider extends ServiceProvider
         $migrationsDirectoryName = database_path('migrations');
         $migrationsDirectory = opendir($migrationsDirectoryName);
         while ($file = readdir($migrationsDirectory)) {
-            if ($file !== '.' || $file !== '..') {
+            if ($file !== '.' && $file !== '..') {
                 if(Str::contains($file, 'borders')) {
                     unset($migrations[__DIR__ . '/../database/create_borders_table.php.stub']);
                 } elseif(Str::contains($file, 'calling_codes')) {
